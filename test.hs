@@ -31,8 +31,9 @@ mult x y z = x * y * z
 
 -- Week 1 Quiz:
 n = a `div` length xs
-  where a = 10
-  	    xs = [1,2,3,4,5]
+  where
+    a = 10
+    xs = [1,2,3,4,5]
 
 -- exercise 6:
 myProduct [] = 1
@@ -44,3 +45,7 @@ qsort xs = x : qsort larger ++ qsort smaller
   where x = maximum xs
         smaller = [a | a <- xs, a < x]
         larger = [b | b <- xs, b >= x]
+
+fib 0 = 0
+fib 1 = 1
+fib n = fib(n - 1) + fib(n - 2)
