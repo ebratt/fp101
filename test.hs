@@ -8,7 +8,13 @@ double x = x + x
 -- Quadruples an integer: 
 quadruple x = double (double x)
 -- Factorial of a positive integer:
-factorial n = product [1..n]
+fact n = 
+    if n >= 0 
+        then product [1..n]
+    else
+        0
+
+
 -- Average of a list of integers:
 average ns = div (sum ns) (length ns)
 
@@ -29,18 +35,3 @@ zeroto n = [0..n]
 mult :: Int -> (Int -> (Int -> Int))
 mult x y z = x * y * z
 
--- Week 1 Quiz:
-n = a `div` length xs
-  where a = 10
-  	    xs = [1,2,3,4,5]
-
--- exercise 6:
-myProduct [] = 1
-myProduct (x : xs) = x * myProduct xs
-
--- exercise 7:
-qsort [] = []
-qsort xs = x : qsort larger ++ qsort smaller
-  where x = maximum xs
-        smaller = [a | a <- xs, a < x]
-        larger = [b | b <- xs, b >= x]
