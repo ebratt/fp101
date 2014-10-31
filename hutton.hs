@@ -108,3 +108,24 @@ qsort (x:xs) = qsort smaller ++ [x] ++ qsort larger
     smaller = [a|a <- xs, a <= x]
     larger = [b|b <- xs, b > x]
 
+odds :: [a] -> [a]
+odds [] = []
+odds (_:xs) = evens xs
+
+evens :: [a] -> [a]
+evens [] = []
+evens (x:xs) = x : odds xs
+
+product3 :: Num a => [a] -> a
+product3 = foldr (*) 1
+
+drop2 :: Int -> [a] -> [a]
+drop2 0 xs     = xs
+drop2 n []     = []
+drop2 n (_:xs) = drop (n-1) xs
+
+init2 :: [a] -> [a]
+init2 []     = []
+init2 (_:[]) = []
+init2 (x:xs) = x : init2 xs
+
