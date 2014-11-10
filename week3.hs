@@ -18,31 +18,89 @@ odds :: [Integer] -> [Integer]
 odds [] = []
 odds xs = map (\x -> x*2 + 1) xs
 
---start of homework 3
---invalid
-{-halve1 xs = (take n xs, drop n xs)
-  where n = length xs / 2-}
+-- list comprehensions
+squares :: [Int] -> [Int]
+squares xs = map (\x -> x*x) xs
 
---valid
-halve2 xs = splitAt (length xs `div` 2) xs
+factors :: Int -> [Int]
+factors n = filter (\x -> n `mod` x == 0) [1..n]
+    --[x | x <- [1..n], n `mod` x == 0]
 
---valid
-halve3 xs = (take (n `div` 2) xs, drop (n `div` 2) xs)
-  where n = length xs
+pairs :: [a] -> [(a,a)]
+pairs xs = zip xs (tail xs)
 
---invalid 
---halve4 xs = splitAt (length xs `div` 2)
+sorted :: Ord a => [a] -> Bool
+sorted xs = 
+    and [x <= y | (x,y) <- pairs xs]
 
---valid
-halve5 xs = (take n xs, drop (n + 1) xs)
-  where n = length xs `div` 2
+--positions :: Eq a => a -> [a] -> [Int]
+--positions x xs = 
+--    [i | (x', i) <- zip xs [0..n], x == x']
+--    where n = length xs - 1
 
---valid
-halve6 xs = splitAt (div (length xs) 2) xs
+isLower :: Char -> Bool
+isLower a = a <= 'z' && a >= 'a'
 
---invalid
---halve7 xs = splitAt (length xs / 2) xs
+lowers :: String -> Int
+lowers xs = 
+    length [x | x <- xs, isLower x]
 
-halve8 xs = (take n xs, drop n xs)
-  where n = length xs `div` 2
+
+-- recursive functions
+-- tail-call elimination is very important; typically you don't have this in imperative languages
+factorial    :: Int -> Int
+-- non-recursive definition
+--factorial n = product [1..n] 
+--recursive definition
+factorial 0   = 1
+factorial n 
+  | n > 0     = n * factorial (n-1)
+  | otherwise = error "cannot calculate factorial of a negative number"
+
+product'        :: [Int] -> Int
+product' []     = 1
+product' (n:ns) = n * product' ns
+
+length'        :: [a] -> Int
+length' []     = 0
+length' (_:xs) = 1 + length' xs
+
+reverse'        :: [a] -> [a]
+reverse' []     = []
+reverse' (x:xs) = reverse' xs ++ [x]
+
+zip'               :: [a] -> [b] -> [(a,b)]
+zip' [] _          = []
+zip' _ []          = []
+zip' (x:xs) (y:ys) = (x,y) : zip' xs ys
+
+drop' :: Int -> [a] -> [a]
+drop' 0 xs = xs
+drop' _ [] = []
+drop' n (_:xs) = drop' (n-1) xs
+
+{-(++) :: [a] -> [a] -> [a]
+[] ++ ys = ys
+(x:xs) ++ ys = x : (xs ++ ys)
+-}
+
+--quicksort in recursive definition
+quicksort        :: Ord a => [a] -> [a]
+quicksort []     = []
+quicksort (x:xs) = quicksort smaller ++ [x] ++ quicksort larger
+  where smaller  = [a | a <- xs, a <= x] -- reads, "a list of a's such that each a is <= x"
+        larger   = [b | b <- xs, b > x] -- reads, "a list of b's such that each b is > x"
+
+rep     :: Int -> a -> [a]
+rep 0 _ = []
+rep n x = x : rep (n-1) x
+
+select          :: [a] -> Int -> a
+select [] _     = error "cannot select from an empty list"
+select (x:xs) 0 = x
+select (x:xs) n = select xs (n-1)
+
+exists          :: Eq a => a -> [a] -> Bool
+exists _ []     = False
+exists x (y:ys) = if x == y then True else exists x ys
 
