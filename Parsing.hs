@@ -138,3 +138,7 @@ integer          = token int
 symbol           :: String -> Parser String
 symbol xs        = token (string xs)
 
+comment          :: Parser ()
+comment           = do string "--"
+                       many (sat (/= '\n'))
+                       return ()

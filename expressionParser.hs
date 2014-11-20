@@ -1,3 +1,5 @@
+module ExpParser where
+
 import Parsing
 
 expr     :: Parser Int

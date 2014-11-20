@@ -1,4 +1,4 @@
-{-module Monads where
+module Monads where
 
 -- monads, from graham hutton
 inc        :: [Int] -> [Int]
@@ -33,10 +33,53 @@ seqn (Monads.Just x) (Monads.Just y) = Monads.Just (x, y)
 
 (>>=)                 :: Monads.Maybe a -> (a -> Monads.Maybe b) -> Monads.Maybe b
 Monads.Nothing >>= _  = Monads.Nothing
-(Monads.Just x) >>= f = f x-}
+(Monads.Just x) >>= f = f x
 
 pairs       :: [a] -> [b] -> [(a,b)]
 pairs xs ys = do x <- xs
                  y <- ys
                  return (x, y)
 
+
+data Tree a = Leaf a | Node (Tree a) (Tree a)
+  deriving Show 
+
+tree :: Tree Char
+tree = Node (Node (Leaf 'a') (Leaf 'b')) (Leaf 'c')
+
+type State = Int
+
+data ST a = S (State -> (a, State))
+
+apply            :: (a -> Maybe b) -> Maybe a -> Maybe b
+apply f Nothing  = Nothing
+apply f (Just x) = f x
+
+instance Monad ST where
+      -- return :: a -> ST a
+      return x  =  \s -> (x,s)
+
+      -- (>>=)  :: ST a -> (a -> ST b) -> ST b
+      st >>= f  =  \s -> let (x,s') = st s in f x s'
+
+fresh :: ST Int
+fresh = S (\n -> (n, n+1))
+
+
+beep :: IO ()
+beep = putStr "\BEL"
+
+type Pos = (Int, Int)
+
+goto :: Pos -> IO ()
+goto (x,y) = putStr ("\ESC[" ++ show y ++ ";" ++ show x ++ "H")
+
+writeat :: Pos -> String -> IO ()
+writeat p xs = do goto p
+                  putStr xs
+
+
+seqn :: [IO a] -> IO ()
+seqn [] = return ()
+seqn (a:as) = do a
+                 seqn as
