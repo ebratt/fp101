@@ -52,7 +52,10 @@ p +++ q          = p `mplus` q
 -- a parser for single characters that satisfy the predicate p
 sat              :: (Char -> Bool) -> Parser Char
 sat p            = do x <- item
-                      if p x then return x else failure
+                      if p x then 
+                        return x 
+                      else 
+                        failure
 
 digit            :: Parser Char
 digit            = sat isDigit
@@ -69,6 +72,7 @@ letter           = sat isAlpha
 alphanum         :: Parser Char
 alphanum         = sat isAlphaNum
 
+-- char uses a section for (== x)
 char             :: Char -> Parser Char
 char x           = sat (== x)
 

@@ -27,4 +27,11 @@ eval xs  = case (parse expr xs) of
               [(_, out)] -> error ("unused input " ++ out)
               []         -> error "invalid input"
 
-
+-- the real advantage of monads is that you can use the do.. syntax
+p :: Parser String
+p = do char '['
+       d <- digit
+       ds <- many (do char ','
+                      digit)
+       char ']'
+       return (d:ds)
